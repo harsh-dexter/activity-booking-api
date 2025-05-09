@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "a00325ef-670e-4362-9af7-1b1aa15dd834",
+		"name": "MeetX Backend API",
+		"description": "The MeetX API provides endpoints for user authentication, activity management, and event bookings. It supports operations like registering users, logging in, viewing and creating activities, booking events, and retrieving user-specific bookings. Authentication is required for protected routes using a Bearer token in the `Authorization` header.\n\nReplace {{base_url}} with API URL in your Postman environment.\n\nRegister via /auth/register to obtain a JWT token for authenticated routes.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43870942",
+		"_collection_link": "https://harsh-874579.postman.co/workspace/472af802-ed7b-41ff-8d29-c58d6e47537f/collection/43870942-a00325ef-670e-4362-9af7-1b1aa15dd834?action=share&source=collection_link&creator=43870942"
+	},
+	"item": [
+		{
+			"name": "User Registration",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Test User 1\",\r\n    \"email\": \"testuser1@example.com\",\r\n    \"phone\": \"1234567890\",\r\n    \"password\": \"password123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				},
+				"description": "Registers a new user account using name, email, phone number, and password. No authentication is required. Returns a success message and user info on successful registration."
+			},
+			"response": []
+		},
+		{
+			"name": "User Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"testuser@example.com\",\r\n    \"password\": \"password123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/auth/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				},
+				"description": "Authenticates a user using email and password. Returns a JWT token on successful login, which must be used in the Authorization header for protected routes."
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Activities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/activities",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"activities"
+					]
+				},
+				"description": "Fetches a list of all available activities or events. Publicly accessible; does not require authentication."
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Activity (Admin)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{AUTH_TOKEN}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Afternoon Cricket Match\",\r\n    \"description\": \"A friendly T20 cricket match\",\r\n    \"location\": \"City Ground\",\r\n    \"dateTime\": \"2025-09-16T18:00:00.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/activities",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"activities"
+					]
+				},
+				"description": "Allows an admin to create a new activity with title, description, location, and date/time. Requires a valid Bearer token in the Authorization header."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Activity",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/activities/{{ACTIVITY_ID}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"activities",
+						"{{ACTIVITY_ID}}"
+					]
+				},
+				"description": "Retrieves detailed information about a specific activity by its ID. Publicly accessible; does not require authentication."
+			},
+			"response": []
+		},
+		{
+			"name": "Book an Activity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{AUTH_TOKEN}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"activityId\": \"{{ACTIVITY_ID}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/bookings",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"bookings"
+					]
+				},
+				"description": "Books a specific activity for the currently authenticated user. Requires a valid Bearer token and the `activityId` of the event to book."
+			},
+			"response": []
+		},
+		{
+			"name": "Get My Bookings",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{AUTH_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/bookings/me",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"bookings",
+						"me"
+					]
+				},
+				"description": "Returns all bookings made by the currently authenticated user. Requires a valid Bearer token in the Authorization header."
+			},
+			"response": []
+		}
+	]
+}
